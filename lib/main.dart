@@ -1,7 +1,9 @@
+import 'package:auto_login_app/src/utils/env_client.dart';
 import 'package:auto_login_app/src/utils/route_generator.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future main() async {
+  await EnvClient.loadEnvFiles();
   runApp(const MyApp());
 }
 
