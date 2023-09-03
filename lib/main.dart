@@ -1,9 +1,9 @@
-import 'package:auto_login_app/src/utils/env_client.dart';
-import 'package:auto_login_app/src/utils/route_generator.dart';
+import 'package:auto_login_app/src/config/env_config.dart';
+import 'package:auto_login_app/src/config/route_config.dart';
 import 'package:flutter/material.dart';
 
 Future main() async {
-  await EnvClient.loadEnvFiles();
+  await EnvConfig.loadEnvFiles();
   runApp(const MyApp());
 }
 
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       initialRoute: '/',
-      onGenerateRoute: RouteGenerator.generateRoute,
+      onGenerateRoute: RouteConfig.generateRoute,
     );
   }
 }

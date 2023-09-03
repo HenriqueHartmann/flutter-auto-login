@@ -2,7 +2,7 @@ import 'package:auto_login_app/src/features/dashboard/presentation/dashboard_mai
 import 'package:auto_login_app/src/features/login/presentation/login_main.dart';
 import 'package:flutter/material.dart';
 
-class RouteGenerator {
+class RouteConfig {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
 
