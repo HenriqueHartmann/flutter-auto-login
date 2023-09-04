@@ -1,9 +1,11 @@
-import 'package:auto_login_app/src/config/env_config.dart';
-import 'package:auto_login_app/src/config/route_config.dart';
+import 'package:auto_login_app/src/core/config/env_config.dart';
+import 'package:auto_login_app/src/core/config/injection_config.dart';
+import 'package:auto_login_app/src/core/config/route_config.dart';
 import 'package:flutter/material.dart';
 
 Future main() async {
   await EnvConfig.loadEnvFiles();
+  await InjectionConfig().init();
   runApp(const MyApp());
 }
 
