@@ -12,16 +12,7 @@ class LoginMain extends StatefulWidget {
 }
 
 class _LoginMainState extends State<LoginMain> {
-  late LoginCubit pageBloc;
-
-  bool rememberMe = false;
-
-  @override
-  void initState() {
-    pageBloc = LoginDI().getCubitInstance();
-
-    super.initState();
-  }
+  final LoginCubit pageBloc = LoginDI().getCubitInstance();
 
   @override
   Widget build(BuildContext context) {
@@ -55,10 +46,10 @@ class _LoginMainState extends State<LoginMain> {
                   Text('Login'),
                 ],
               ),
-              _LoginInput(pageBloc: pageBloc),
-              _PasswordInput(pageBloc: pageBloc),
-              _RememberMeInput(pageBloc: pageBloc),
-              _LoginButton(pageBloc: pageBloc),
+              _LoginInput(),
+              _PasswordInput(),
+              _RememberMeInput(),
+              _LoginButton(),
             ],
           ),
         ),
@@ -68,9 +59,7 @@ class _LoginMainState extends State<LoginMain> {
 }
 
 class _LoginInput extends StatelessWidget {
-  final LoginCubit pageBloc;
-
-  const _LoginInput({required this.pageBloc});
+final LoginCubit pageBloc = LoginDI().getCubitInstance();
 
   @override
   Widget build(BuildContext context) {
@@ -95,9 +84,7 @@ class _LoginInput extends StatelessWidget {
 }
 
 class _PasswordInput extends StatelessWidget {
-  final LoginCubit pageBloc;
-
-  const _PasswordInput({required this.pageBloc});
+final LoginCubit pageBloc = LoginDI().getCubitInstance();
 
   @override
   Widget build(BuildContext context) {
@@ -123,9 +110,7 @@ class _PasswordInput extends StatelessWidget {
 }
 
 class _RememberMeInput extends StatelessWidget {
-  final LoginCubit pageBloc;
-
-  const _RememberMeInput({required this.pageBloc});
+  final LoginCubit pageBloc = LoginDI().getCubitInstance();
 
   @override
   Widget build(BuildContext context) {
@@ -152,9 +137,7 @@ class _RememberMeInput extends StatelessWidget {
 }
 
 class _LoginButton extends StatelessWidget {
-  final LoginCubit pageBloc;
-
-  const _LoginButton({required this.pageBloc});
+  final LoginCubit pageBloc = LoginDI().getCubitInstance();
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +147,7 @@ class _LoginButton extends StatelessWidget {
         return state.status == LoginStatus.loading
             ? const CircularProgressIndicator()
             : ElevatedButton(
-                // key: const Key('loginForm_continue_raisedButton'),
+                key: const Key('loginForm_continue_elevatedButton'),
                 onPressed: state.isValid
                     ? () {
                         pageBloc.authenticateUser();
