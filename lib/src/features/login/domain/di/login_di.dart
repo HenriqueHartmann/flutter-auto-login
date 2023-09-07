@@ -4,7 +4,6 @@ import 'package:auto_login_app/src/features/login/domain/repositories/auth_repos
 import 'package:auto_login_app/src/features/login/domain/use_cases/login_use_case.dart';
 import 'package:auto_login_app/src/features/login/presentation/cubit/login_cubit.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http;
 
 class LoginDI {
   void init({required GetIt instance}) {
@@ -29,9 +28,6 @@ class LoginDI {
     instance.registerLazySingleton<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(client: instance()),
     );
-
-    //! External
-    instance.registerLazySingleton(() => http.Client());
   }
 
   LoginCubit getCubitInstance() {
