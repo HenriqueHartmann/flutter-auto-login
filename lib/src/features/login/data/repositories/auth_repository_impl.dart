@@ -1,5 +1,6 @@
 import 'package:auto_login_app/src/core/error/exception.dart';
 import 'package:auto_login_app/src/core/network/network_info.dart';
+import 'package:auto_login_app/src/features/login/data/data_sources/auth_local_data_source.dart';
 import 'package:auto_login_app/src/features/login/data/data_sources/auth_remote_data_source.dart';
 import 'package:auto_login_app/src/features/login/data/models/auth_model.dart';
 import 'package:auto_login_app/src/features/login/data/models/user_model.dart';
@@ -8,10 +9,14 @@ import 'package:logger/logger.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
+  final AuthLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
-  AuthRepositoryImpl(
-      {required this.remoteDataSource, required this.networkInfo});
+  AuthRepositoryImpl({
+    required this.remoteDataSource,
+    required this.localDataSource,
+    required this.networkInfo,
+  });
 
   Logger logger = Logger();
 
@@ -22,8 +27,8 @@ class AuthRepositoryImpl implements AuthRepository {
     if (isConnected == true) {
       try {
         final response = await remoteDataSource.authenticate(body: body);
-        
-        logger.i('authenticate: Response was a Success');
+
+        logger.i('authenticate: Success');
 
         return response;
       } catch (e, s) {
@@ -33,6 +38,19 @@ class AuthRepositoryImpl implements AuthRepository {
       }
     }
 
-    throw ConnectionException();    
+    throw ConnectionException();
+  }
+
+  @override
+  Future<void> saveLogin({required AuthModel body}) async {
+    try {
+      await localDataSource.saveLogin(body: body);
+
+      logger.i('saveLogin: Success');
+    } catch (e, s) {
+      logger.f("saveLogin: An error ocurred", error: e, stackTrace: s);
+
+      rethrow;
+    }
   }
 }
