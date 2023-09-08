@@ -21,6 +21,7 @@ class LoginDI {
     instance.registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(
         remoteDataSource: instance(),
+        networkInfo: instance(),
       ),
     );
 
