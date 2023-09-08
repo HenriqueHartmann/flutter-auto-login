@@ -1,4 +1,4 @@
-import 'package:auto_login_app/src/core/use_cases/use_case.dart';
+import 'package:auto_login_app/src/core/use_case/use_case.dart';
 import 'package:auto_login_app/src/features/login/data/models/auth_model.dart';
 import 'package:auto_login_app/src/features/login/data/models/user_model.dart';
 import 'package:auto_login_app/src/features/login/domain/repositories/auth_repository.dart';
