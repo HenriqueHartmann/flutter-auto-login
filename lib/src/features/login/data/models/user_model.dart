@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:auto_login_app/src/core/error/failure.dart';
+
 class UserModel {
   String username;
   String accessToken;
@@ -9,10 +11,14 @@ class UserModel {
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
-    return UserModel(
-      username: map['username'] as String,
-      accessToken: map['accessToken'] as String,
-    );
+    try {
+      return UserModel(
+        username: map['username'] as String,
+        accessToken: map['accessToken'] as String,
+      );
+    } catch (e) {
+      throw SerializerFailure();
+    }
   }
 
   factory UserModel.fromJson(String source) =>
