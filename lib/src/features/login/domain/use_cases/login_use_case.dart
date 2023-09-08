@@ -3,31 +3,22 @@ import 'package:auto_login_app/src/features/login/data/models/auth_model.dart';
 import 'package:auto_login_app/src/features/login/data/models/user_model.dart';
 import 'package:auto_login_app/src/features/login/domain/repositories/auth_repository.dart';
 
-class LoginUseCase extends UseCase<UserModel, LoginParams> {
+class LoginUseCase extends UseCase<UserModel, AuthModel> {
+  /* 
+    This use case handles the logic for authenticating the user based on the 
+    provided login and password. It should verify the credentials and return 
+    a result indicating whether the authentication was successful or not. 
+  */
+
   final AuthRepository repository;
 
   LoginUseCase(this.repository);
 
   @override
-  Future<UserModel> execute(LoginParams params) async {
-    final body = AuthModel(login: params.login, password: params.password);
+  Future<UserModel> execute(AuthModel params) async {
 
-    final response = await repository.authenticate(body: body);
-
-    // TODO: Save Login
+    final response = await repository.authenticate(body: params);
 
     return response;
   }
-}
-
-class LoginParams {
-  final String login;
-  final String password;
-  final bool rememberMe;
-
-  LoginParams({
-    required this.login,
-    required this.password,
-    this.rememberMe = false,
-  });
 }
