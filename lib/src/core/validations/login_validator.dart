@@ -4,9 +4,9 @@ class LoginValidator implements Validator<String> {
   @override
   bool validate(String value) {
     if (value.isEmpty) {
-      return true;
+      return false;
     }
 
-    return false;
+    return true;
   }
 }
