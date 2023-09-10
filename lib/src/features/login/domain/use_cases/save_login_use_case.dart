@@ -1,6 +1,6 @@
+import 'package:auto_login_app/src/core/shared/domain/repositories/stored_login_repository.dart';
 import 'package:auto_login_app/src/core/use_case/use_case.dart';
 import 'package:auto_login_app/src/features/login/data/models/auth_model.dart';
-import 'package:auto_login_app/src/features/login/domain/repositories/auth_repository.dart';
 
 class SaveLoginUseCase extends UseCase<void, AuthModel> {
   /*
@@ -10,7 +10,7 @@ class SaveLoginUseCase extends UseCase<void, AuthModel> {
     invoked if the user explicitly chooses to remember their login.
   */
 
-  final AuthRepository repository;
+  final StoredLoginRepository repository;
 
   SaveLoginUseCase(this.repository);
 

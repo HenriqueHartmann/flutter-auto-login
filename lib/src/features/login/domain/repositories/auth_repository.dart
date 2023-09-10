@@ -3,5 +3,4 @@ import 'package:auto_login_app/src/features/login/data/models/user_model.dart';
 
 abstract class AuthRepository {
   Future<UserModel> authenticate({required AuthModel body});
-  Future<void> saveLogin({required AuthModel body});
 }
