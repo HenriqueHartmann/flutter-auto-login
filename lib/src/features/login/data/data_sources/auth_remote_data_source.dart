@@ -1,5 +1,4 @@
-import 'dart:convert' as convert;
-
+import 'package:auto_login_app/src/core/error/failure.dart';
 import 'package:auto_login_app/src/features/login/data/models/auth_model.dart';
 import 'package:auto_login_app/src/features/login/data/models/user_model.dart';
 import 'package:auto_login_app/src/core/mixins/env_mixin.dart';
@@ -25,9 +24,12 @@ class AuthRemoteDataSourceImpl with EnvMixin implements AuthRemoteDataSource {
       body: body.toMap(),
     );
 
-    final jsonResponse =
-        convert.jsonDecode(response.body) as Map<String, dynamic>;
+    if (response.statusCode == 200) {
+      return UserModel.fromJson(response.body);
+    } else if (response.statusCode == 401) {
+      throw AuthenticationFailure();
+    }
 
-    return UserModel.fromMap(jsonResponse);
+    throw ResponseFailure();
   }
 }
