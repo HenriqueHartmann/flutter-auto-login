@@ -24,9 +24,9 @@ class SecureStorageService {
     return readData;
   }
 
-  Future<void> deleteSecureData(StorageModel item) async {
+  Future<void> deleteSecureData(String key) async {
     await _secureStorage.delete(
-      key: item.key,
+      key: key,
       aOptions: _getAndroidOptions(),
     );
   }
