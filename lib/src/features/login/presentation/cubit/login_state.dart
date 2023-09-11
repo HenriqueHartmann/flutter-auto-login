@@ -2,6 +2,7 @@ import 'package:auto_login_app/src/features/login/data/models/text_input_model.d
 
 enum LoginStatus {
   initial,
+  loaded,
   loading,
   success,
   failure,
