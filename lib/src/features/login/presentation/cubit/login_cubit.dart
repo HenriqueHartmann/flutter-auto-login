@@ -1,7 +1,10 @@
+import 'package:auto_login_app/src/core/error/failure.dart';
 import 'package:auto_login_app/src/core/validations/login_validator.dart';
 import 'package:auto_login_app/src/core/validations/password_validator.dart';
 import 'package:auto_login_app/src/features/login/data/models/auth_model.dart';
 import 'package:auto_login_app/src/features/login/data/models/text_input_model.dart';
+import 'package:auto_login_app/src/core/shared/domain/use_cases/clean_stored_login_use_case.dart';
+import 'package:auto_login_app/src/features/login/domain/use_cases/get_stored_login_use_case.dart';
 import 'package:auto_login_app/src/features/login/domain/use_cases/login_use_case.dart';
 import 'package:auto_login_app/src/features/login/domain/use_cases/save_login_use_case.dart';
 import 'package:auto_login_app/src/features/login/presentation/cubit/login_state.dart';
@@ -10,11 +13,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class LoginCubit extends Cubit<LoginState> {
   final LoginUseCase loginUseCase;
   final SaveLoginUseCase saveLoginUseCase;
+  final GetStoredLoginUseCase getStoredLoginUseCase;
+  final CleanStoredLoginUseCase cleanStoredLoginUseCase;
 
   LoginCubit({
     required this.loginUseCase,
     required this.saveLoginUseCase,
-  }) : super(const LoginState());
+    required this.getStoredLoginUseCase,
+    required this.cleanStoredLoginUseCase,
+  }) : super(const LoginState()) {
+    checkStoredLogin();
+  }
+
+  void checkStoredLogin() async {
+    try {
+      final response = await getStoredLoginUseCase.execute(null);
+
+      await loginUseCase.execute(response);
+
+      emit(state.copyWith(status: LoginStatus.success));
+    } on AuthenticationFailure {
+      await cleanStoredLoginUseCase.execute(null);
+
+      emit(state.copyWith(status: LoginStatus.loaded));
+    } catch (e) {
+      emit(state.copyWith(status: LoginStatus.failure));
+    }
+  }
 
   void onLoginChanged(
     String login,
@@ -60,7 +85,7 @@ class LoginCubit extends Cubit<LoginState> {
     );
   }
 
-  Future<void> authenticateUser() async {
+  void authenticateUser() async {
     if (state.isValid) {
       emit(state.copyWith(status: LoginStatus.loading));
       try {
