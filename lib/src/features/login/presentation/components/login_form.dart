@@ -18,8 +18,10 @@ class LoginForm extends StatelessWidget {
             );
           context.read<LoginCubit>().changeToInitState();
         } else if (state.status == LoginStatus.success) {
-          Navigator.of(context).pushNamed('/dashboard').whenComplete(
-              () => context.read<LoginCubit>().changeToInitState());
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/dashboard', (route) => false)
+              .whenComplete(
+                  () => context.read<LoginCubit>().changeToInitState());
         }
       },
       child: Padding(
@@ -49,17 +51,21 @@ class _LoginInput extends StatelessWidget {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) => previous.login != current.login,
       builder: (context, state) {
-        return TextField(
-          key: const Key('loginForm_loginInput_textField'),
-          onChanged: (login) {
-            context.read<LoginCubit>().onLoginChanged(login);
-          },
-          decoration: InputDecoration(
-            hintText: 'Login',
-            errorText:
-                state.login.displayError == true ? 'Invalid login' : null,
-          ),
-        );
+        if (state.status != LoginStatus.initial) {
+          return TextField(
+            key: const Key('loginForm_loginInput_textField'),
+            onChanged: (login) {
+              context.read<LoginCubit>().onLoginChanged(login);
+            },
+            decoration: InputDecoration(
+              hintText: 'Login',
+              errorText:
+                  state.login.displayError == true ? 'Invalid login' : null,
+            ),
+          );
+        }
+
+        return const SizedBox.shrink();
       },
     );
   }
@@ -71,18 +77,23 @@ class _PasswordInput extends StatelessWidget {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
-        return TextField(
-          key: const Key('loginForm_passwordInput_textField'),
-          onChanged: (password) {
-            context.read<LoginCubit>().onPasswordChanged(password);
-          },
-          obscureText: true,
-          decoration: InputDecoration(
-            hintText: 'Password',
-            errorText:
-                state.password.displayError == true ? 'Invalid password' : null,
-          ),
-        );
+        if (state.status != LoginStatus.initial) {
+          return TextField(
+            key: const Key('loginForm_passwordInput_textField'),
+            onChanged: (password) {
+              context.read<LoginCubit>().onPasswordChanged(password);
+            },
+            obscureText: true,
+            decoration: InputDecoration(
+              hintText: 'Password',
+              errorText: state.password.displayError == true
+                  ? 'Invalid password'
+                  : null,
+            ),
+          );
+        }
+
+        return const SizedBox.shrink();
       },
     );
   }
@@ -95,18 +106,22 @@ class _RememberMeInput extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.rememberMe != current.rememberMe,
       builder: (context, state) {
-        return ListTile(
-          key: const Key('loginForm_rememberMeInput_radioButton'),
-          title: const Text('Lembrar de mim'),
-          leading: Radio<bool>(
-            toggleable: true,
-            value: true,
-            groupValue: state.rememberMe,
-            onChanged: (bool? value) {
-              context.read<LoginCubit>().onRememberMeChanged(value ?? false);
-            },
-          ),
-        );
+        if (state.status != LoginStatus.initial) {
+          return ListTile(
+            key: const Key('loginForm_rememberMeInput_radioButton'),
+            title: const Text('Lembrar de mim'),
+            leading: Radio<bool>(
+              toggleable: true,
+              value: true,
+              groupValue: state.rememberMe,
+              onChanged: (bool? value) {
+                context.read<LoginCubit>().onRememberMeChanged(value ?? false);
+              },
+            ),
+          );
+        }
+
+        return const SizedBox.shrink();
       },
     );
   }
@@ -119,15 +134,17 @@ class _LoginButton extends StatelessWidget {
       builder: (context, state) {
         return state.status == LoginStatus.loading
             ? const CircularProgressIndicator()
-            : ElevatedButton(
-                key: const Key('loginForm_continue_elevatedButton'),
-                onPressed: state.isValid
-                    ? () {
-                        context.read<LoginCubit>().authenticateUser();
-                      }
-                    : null,
-                child: const Text('Login'),
-              );
+            : state.status != LoginStatus.initial
+                ? ElevatedButton(
+                    key: const Key('loginForm_continue_elevatedButton'),
+                    onPressed: state.isValid
+                        ? () {
+                            context.read<LoginCubit>().authenticateUser();
+                          }
+                        : null,
+                    child: const Text('Login'),
+                  )
+                : const SizedBox.shrink();
       },
     );
   }
