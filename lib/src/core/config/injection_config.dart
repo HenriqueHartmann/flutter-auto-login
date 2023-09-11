@@ -4,6 +4,7 @@ import 'package:auto_login_app/src/core/shared/data/data_sources/stored_login_lo
 import 'package:auto_login_app/src/core/shared/data/repositories/stored_login_repository_impl.dart';
 import 'package:auto_login_app/src/core/shared/domain/repositories/stored_login_repository.dart';
 import 'package:auto_login_app/src/core/shared/domain/use_cases/clean_stored_login_use_case.dart';
+import 'package:auto_login_app/src/features/dashboard/domain/di/dashboard_di.dart';
 import 'package:auto_login_app/src/features/login/domain/di/login_di.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -33,5 +34,6 @@ class InjectionConfig {
     );
 
     LoginDI().init(instance: sl);
+    DashboardDI().init(instance: sl);
   }
 }
