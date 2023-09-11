@@ -16,12 +16,12 @@ class LoginForm extends StatelessWidget {
             ..showSnackBar(
               const SnackBar(content: Text('Authentication Failure')),
             );
-          context.read<LoginCubit>().changeToInitState();
+          context.read<LoginCubit>().changeToLoadedState();
         } else if (state.status == LoginStatus.success) {
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/dashboard', (route) => false)
               .whenComplete(
-                  () => context.read<LoginCubit>().changeToInitState());
+                  () => context.read<LoginCubit>().changeToLoadedState());
         }
       },
       child: Padding(
@@ -49,9 +49,13 @@ class _LoginInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
-      buildWhen: (previous, current) => previous.login != current.login,
+      buildWhen: (previous, current) =>
+          previous.login != current.login ||
+          (current.status != LoginStatus.initial &&
+              current.status != LoginStatus.success),
       builder: (context, state) {
-        if (state.status != LoginStatus.initial) {
+        if (state.status != LoginStatus.initial &&
+            state.status != LoginStatus.success) {
           return TextField(
             key: const Key('loginForm_loginInput_textField'),
             onChanged: (login) {
@@ -75,9 +79,12 @@ class _PasswordInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
-      buildWhen: (previous, current) => previous.password != current.password,
+      buildWhen: (previous, current) => previous.password != current.password ||
+          (current.status != LoginStatus.initial &&
+              current.status != LoginStatus.success),
       builder: (context, state) {
-        if (state.status != LoginStatus.initial) {
+        if (state.status != LoginStatus.initial &&
+            state.status != LoginStatus.success) {
           return TextField(
             key: const Key('loginForm_passwordInput_textField'),
             onChanged: (password) {
@@ -104,9 +111,12 @@ class _RememberMeInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) =>
-          previous.rememberMe != current.rememberMe,
+          previous.rememberMe != current.rememberMe ||
+          (current.status != LoginStatus.initial &&
+              current.status != LoginStatus.success),
       builder: (context, state) {
-        if (state.status != LoginStatus.initial) {
+        if (state.status != LoginStatus.initial &&
+            state.status != LoginStatus.success) {
           return ListTile(
             key: const Key('loginForm_rememberMeInput_radioButton'),
             title: const Text('Lembrar de mim'),
@@ -134,7 +144,8 @@ class _LoginButton extends StatelessWidget {
       builder: (context, state) {
         return state.status == LoginStatus.loading
             ? const CircularProgressIndicator()
-            : state.status != LoginStatus.initial
+            : state.status != LoginStatus.initial &&
+                    state.status != LoginStatus.success
                 ? ElevatedButton(
                     key: const Key('loginForm_continue_elevatedButton'),
                     onPressed: state.isValid

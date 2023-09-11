@@ -36,6 +36,8 @@ class LoginCubit extends Cubit<LoginState> {
       await cleanStoredLoginUseCase.execute(null);
 
       emit(state.copyWith(status: LoginStatus.loaded));
+    } on SecureStorageEmptyFailure {
+      emit(state.copyWith(status: LoginStatus.loaded));
     } catch (e) {
       emit(state.copyWith(status: LoginStatus.failure));
     }
@@ -107,10 +109,10 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  void changeToInitState() {
+  void changeToLoadedState() {
     emit(
       state.copyWith(
-        status: LoginStatus.initial,
+        status: LoginStatus.loaded,
       ),
     );
   }
