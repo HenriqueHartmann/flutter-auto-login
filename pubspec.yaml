@@ -30,4 +30,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - lib/src/core/config/.env
+    - lib/src/core/config/dev.env
+    - lib/src/core/config/prod.env

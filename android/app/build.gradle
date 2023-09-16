@@ -61,6 +61,22 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions "autologin"
+
+    productFlavors {
+        dev {
+            dimension "autologin"
+            resValue "string", "app_name", "Auto Login App"
+            applicationIdSuffix ".dev"
+        }
+
+        prod {
+            dimension "autologin"
+            resValue "string", "app_name", "Auto Login App"
+            applicationIdSuffix ".prod"
+        }
+    }
 }
 
 flutter {

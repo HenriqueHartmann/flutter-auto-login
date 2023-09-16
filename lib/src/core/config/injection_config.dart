@@ -10,9 +10,9 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 class InjectionConfig {
-  final sl = GetIt.instance;
+  static Future<void> init() async {
+    final sl = GetIt.instance;
 
-  Future<void> init() async {
     sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
     sl.registerLazySingleton(() => http.Client());
     sl.registerLazySingleton<SecureStorageService>(
