@@ -1,14 +1,19 @@
 import 'dart:convert';
 
 import 'package:auto_login_app/src/core/error/failure.dart';
+import 'package:equatable/equatable.dart';
 
-class UserModel {
-  String username;
-  String accessToken;
-  UserModel({
+class UserModel extends Equatable {
+  final String username;
+  final String accessToken;
+
+  const UserModel({
     required this.username,
     required this.accessToken,
   });
+
+  @override
+  List<Object> get props => [username, accessToken];
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     try {
