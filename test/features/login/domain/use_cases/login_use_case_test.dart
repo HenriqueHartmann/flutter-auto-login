@@ -1,48 +1,50 @@
 import 'package:auto_login_app/src/core/error/failure.dart';
 import 'package:auto_login_app/src/features/login/data/models/auth_model.dart';
 import 'package:auto_login_app/src/features/login/data/models/user_model.dart';
+import 'package:auto_login_app/src/features/login/domain/repositories/auth_repository.dart';
 import 'package:auto_login_app/src/features/login/domain/use_cases/login_use_case.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
-import '../../data/data_sources/mock_auth_remote_data_source.dart';
-import '../../data/repositories/mock_auth_repository.dart';
+import 'login_use_case_test.mocks.dart';
 
+@GenerateMocks([AuthRepository])
 void main() {
-  late LoginUseCase usecase;
   late MockAuthRepository repository;
+  late LoginUseCase usecase;
 
   setUp(() {
-    repository =
-        MockAuthRepository(remoteDataSource: MockAuthRemoteDataSource());
+    repository = MockAuthRepository();
     usecase = LoginUseCase(repository);
   });
 
-  final AuthModel auth1 = AuthModel(login: 'myLogin', password: '123');
-  final AuthModel auth2 = AuthModel(login: 'myLogin1', password: '1234');
+  group(
+    'Login UseCase',
+    () {
+      test(
+        '#1 should authenticate the user with success',
+        () async {
+          final AuthModel auth = AuthModel(login: 'myLogin', password: '123');
 
-  const UserModel user =
-      UserModel(username: 'myLogin', accessToken: 'accessToken');
+          when(repository.authenticate(body: auth)).thenAnswer((_) async =>
+              const UserModel(username: 'myLogin', accessToken: 'accessToken'));
 
-  test(
-    '#1 should authenticate the user from the repository',
-    () async {
-      final result = await usecase.execute(auth1);
-      expect(result, user);
-    },
-  );
+          expect(await usecase.execute(auth), isA<UserModel>());
+        },
+      );
 
-  test(
-    '#2 should authenticate the user from the repository',
-    () async {
-      late dynamic result;
+      test(
+        '#2 should authenticate the user with failure',
+        () async {
+          final AuthModel auth = AuthModel(login: 'myLogin', password: '123');
 
-      try {
-        result = await usecase.execute(auth2);
-      } catch (e) {
-        result = AuthenticationFailure();
-      }
+          when(repository.authenticate(body: auth))
+              .thenThrow(AuthenticationFailure);
 
-      expect(result, isA<AuthenticationFailure>());
+          expect(usecase.execute(auth), throwsA(AuthenticationFailure));
+        },
+      );
     },
   );
 }

@@ -16,9 +16,6 @@ class LoginUseCase extends UseCase<UserModel, AuthModel> {
 
   @override
   Future<UserModel> execute(AuthModel params) async {
-
-    final response = await repository.authenticate(body: params);
-
-    return response;
+    return await repository.authenticate(body: params);
   }
 }
