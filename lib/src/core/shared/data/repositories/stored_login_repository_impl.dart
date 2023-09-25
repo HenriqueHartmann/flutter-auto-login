@@ -13,6 +13,21 @@ class StoredLoginRepositoryImpl implements StoredLoginRepository {
   Logger logger = Logger();
 
   @override
+  Future<bool> saveLogin({required AuthModel body}) async {
+    try {
+      await localDataSource.saveLogin(body: body);
+
+      logger.i('saveLogin: Success');
+
+      return true;
+    } catch (e, s) {
+      logger.f("saveLogin: An error ocurred", error: e, stackTrace: s);
+
+      return false;
+    }
+  }
+
+  @override
   Future<AuthModel> getStoredLogin() async {
     try {
       final response = await localDataSource.getStoredLogin();
@@ -22,19 +37,6 @@ class StoredLoginRepositoryImpl implements StoredLoginRepository {
       return response;
     } catch (e) {
       logger.i('getStoredLogin: An error ocurred');
-
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> saveLogin({required AuthModel body}) async {
-    try {
-      await localDataSource.saveLogin(body: body);
-
-      logger.i('saveLogin: Success');
-    } catch (e, s) {
-      logger.f("saveLogin: An error ocurred", error: e, stackTrace: s);
 
       rethrow;
     }
